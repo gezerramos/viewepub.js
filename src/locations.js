@@ -181,7 +181,7 @@ class Locations {
 	 * @param  {string} startCfi start position
 	 * @param  {int} wordCount how many words to split on
 	 * @param  {int} count result count
-	 * @return {object} locations
+	 * @return {Promise<Array<string>>} locations
 	 */
 	generateFromWords(startCfi, wordCount, count) {
 		var start = startCfi ? new EpubCFI(startCfi) : undefined;
