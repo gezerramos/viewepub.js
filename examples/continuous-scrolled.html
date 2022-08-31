@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,17 +11,16 @@
   <link rel="stylesheet" type="text/css" href="examples.css">
 
   <style type="text/css">
-
     .epub-container {
       /* min-width: 320px; */
       /* margin: 0 auto; */
       /* position: relative; */
     }
 
-    .epub-container .epub-view > iframe {
-        background: white;
-        box-shadow: 0 0 4px #ccc;
-        /*margin: 10px;
+    .epub-container .epub-view>iframe {
+      background: white;
+      box-shadow: 0 0 4px #ccc;
+      /*margin: 10px;
         padding: 20px;*/
     }
 
@@ -30,9 +30,9 @@
       /* overflow: auto; */
       margin: 0 auto;
     }
-
   </style>
 </head>
+
 <body>
   <div id="viewer"></div>
 
@@ -44,20 +44,20 @@
     // Load the opf
     var book = ePub(url || "http://api.devoliveira.com:8080/testepubpsiqueasy/testerro/content.opf");
     var rendition = book.renderTo("viewer", {
-        manager: "continuous",
-        flow: "scrolled",
-        width: "100%",
-        height: "100%"
-      });
+      manager: "continuous",
+      flow: "scrolled",
+      width: "100%",
+      height: "100%"
+    });
     var displayed = rendition.display(currentSectionIndex);
 
 
-    displayed.then(function(renderer){
+    displayed.then(function (renderer) {
       // -- do stuff
     });
 
     // Navigation loaded
-    book.loaded.navigation.then(function(toc){
+    book.loaded.navigation.then(function (toc) {
       // console.log(toc);
     });
 
@@ -65,4 +65,5 @@
   </script>
 
 </body>
+
 </html>
