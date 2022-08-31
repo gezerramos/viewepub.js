@@ -1,11 +1,14 @@
 {
-  "name": "epubjs",
+  "name": "viewepubjs",
   "version": "0.3.93",
-  "description": "Parse and Render Epubs",
+  "description": "Parse and Render Epubs(fchasen@gmail.com)",
   "main": "lib/index.js",
   "module": "src/index.js",
   "types": "types/index.d.ts",
-  "repository": "https://github.com/futurepress/epub.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gezerramos/viewepub.js"
+  },
   "directories": {
     "test": "test"
   },
@@ -24,7 +27,7 @@
     "watch": "babel --watch -d lib/ src/",
     "prepare": "npm run compile && npm run build && npm run minify && npm run legacy && npm run productionLegacy"
   },
-  "author": "fchasen@gmail.com",
+  "author": "gezerramo@gmail.com",
   "license": "BSD-2-Clause",
   "devDependencies": {
     "@babel/cli": "^7.15.7",

@@ -25,7 +25,7 @@
     }
 
     #viewer {
-      width: 600px;
+      width: 800px;
       height: 100vh;
       /* overflow: auto; */
       margin: 0 auto;
@@ -42,7 +42,7 @@
     var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
 
     // Load the opf
-    var book = ePub(url || "https://s3.amazonaws.com/epubjs/books/moby-dick/OPS/package.opf");
+    var book = ePub(url || "http://api.devoliveira.com:8080/testeepub/testerro/content.opf");
     var rendition = book.renderTo("viewer", {
         manager: "continuous",
         flow: "scrolled",
