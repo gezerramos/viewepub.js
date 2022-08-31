@@ -178,8 +178,9 @@ class ContinuousViewManager extends DefaultViewManager {
 
 	counter(bounds) {
 		if (this.settings.axis === "vertical") {
+
 			if (this.settings.manager == "continuous") {
-				this.scrollBy(0, 0, true);
+				this.scrollBy(0, 50, true);
 			} else {
 				this.scrollBy(0, bounds.heightDelta, true);
 			}

@@ -27,7 +27,7 @@
     "watch": "babel --watch -d lib/ src/",
     "prepare": "npm run compile && npm run build && npm run minify && npm run legacy && npm run productionLegacy"
   },
-  "author": "gezerramo@gmail.com",
+  "author": "oliveiracorp.dev01@gmail.com",
   "license": "BSD-2-Clause",
   "devDependencies": {
     "@babel/cli": "^7.15.7",
