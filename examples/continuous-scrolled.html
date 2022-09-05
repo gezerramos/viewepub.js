@@ -5,12 +5,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EPUB.js Continuous Example</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <script src="../dist/epub.js"></script>
 
   <link rel="stylesheet" type="text/css" href="examples.css">
 
   <style type="text/css">
+    /*Disabling Pull-to-Refresh Feature on Mobile*/
+    body {
+      overscroll-behavior-y: contain;
+    }
+
     .epub-container {
       /* min-width: 320px; */
       /* margin: 0 auto; */
@@ -25,15 +32,37 @@
     }
 
     #viewer {
-      width: 800px;
+      width: 600px;
       height: 100vh;
       /* overflow: auto; */
       margin: 0 auto;
+    }
+
+    .progress,
+    #testdd {
+      position: absolute;
+      background-color: transparent;
+      bottom: 0;
+      width: 99%;
+
+      left: 5px;
+      border: 1px solid #121310;
+      z-index: 1000;
     }
   </style>
 </head>
 
 <body>
+  <div id="testdd">ff</div>
+  <div class="progress">
+
+
+    <div id="progress-epub" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="70"
+      aria-valuemin="0" aria-valuemax="100" style="width:70%">
+      70% Complete (danger)
+    </div>
+  </div>
+
   <div id="viewer"></div>
 
   <script>
@@ -42,12 +71,13 @@
     var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
 
     // Load the opf
-    var book = ePub(url || "http://api.devoliveira.com:8080/testepubpsiqueasy/testerro/content.opf");
+    var book = ePub(url || "https://s3.amazonaws.com/epubjs/books/moby-dick/OPS/package.opf");
     var rendition = book.renderTo("viewer", {
       manager: "continuous",
       flow: "scrolled",
       width: "100%",
-      height: "100%"
+      height: "100%",
+      allowScriptedContent: true
     });
     var displayed = rendition.display(currentSectionIndex);
 
@@ -58,9 +88,44 @@
 
     // Navigation loaded
     book.loaded.navigation.then(function (toc) {
-      // console.log(toc);
+      //console.log(toc);
     });
 
+
+    // Generate location and pagination
+    book.ready.then(function () {
+      const stored = localStorage.getItem(book.key() + '-locations');
+      //console.log('metadata:', book.package.metadata);
+      if (stored) {
+        return book.locations.load(stored);
+      } else {
+        return book.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
+      }
+    }).then(function (location) { // This promise will take a little while to return (About 20 seconds or so for Moby Dick)
+      localStorage.setItem(book.key() + '-locations', book.locations.save());
+    });
+
+    // When navigating to the next/previous page
+    rendition.on('relocated', function (locations) {
+
+
+      progress = book.locations.percentageFromCfi(locations.start.cfi);
+      console.log('Progress:', progress); // The % of how far along in the book you are
+      console.log('Current Page:', parseInt(locations.end.index) + 1);
+      console.log('Total Pages:', book.locations.spine.length);
+      console.log("Progress in percent: " + (progress * book.locations.total));
+      console.log('===================================================================');
+
+      document.getElementById("progress-epub").style.width = (((parseInt(locations.end.index) + 1) / book.locations.spine.length) * 100) + "%";
+      document.getElementById("progress-epub").innerHTML = Math.round((((parseInt(locations.end.index) + 1) / book.locations.spine.length) * 100)) + "%";
+
+      document.getElementById("testdd").innerHTML = 'Current Page: ' + (parseInt(locations.end.index) + 1) + " de " + book.locations.spine.length;
+
+
+
+
+      //console.log(locations.start.displayed);
+    });
 
   </script>
 

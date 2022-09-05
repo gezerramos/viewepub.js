@@ -9,6 +9,7 @@ class ContinuousViewManager extends DefaultViewManager {
 		super(options);
 
 		this.name = "continuous";
+		this.pageInLoad = 0;
 
 		this.settings = extend(this.settings || {}, {
 			infinite: true,
@@ -76,10 +77,10 @@ class ContinuousViewManager extends DefaultViewManager {
 		// var bounds = this.stage.bounds();
 		// var dist = Math.floor(offset.top / bounds.height) * bounds.height;
 		var distX = 0,
-			distY = 0;
+				distY = 0;
 
 		var offsetX = 0,
-			offsetY = 0;
+				offsetY = 0;
 
 		if (!this.isPaginated) {
 			distY = offset.top;
@@ -178,9 +179,8 @@ class ContinuousViewManager extends DefaultViewManager {
 
 	counter(bounds) {
 		if (this.settings.axis === "vertical") {
-
 			if (this.settings.manager == "continuous") {
-				this.scrollBy(0, 50, true);
+				this.scrollBy(0, 1, true);
 			} else {
 				this.scrollBy(0, bounds.heightDelta, true);
 			}
@@ -307,13 +307,16 @@ class ContinuousViewManager extends DefaultViewManager {
 		let end = offset + visibleLength + delta;
 		let start = offset - delta;
 
-		if (end >= contentLength) {
-			append();
+		if (this.pageInLoad == 0) {
+			if (end >= contentLength) {
+				append();
+			}
+
+			if (start < 0) {
+				prepend();
+			}
 		}
 
-		if (start < 0) {
-			prepend();
-		}
 
 
 		let promises = newViews.map((view) => {
@@ -321,9 +324,12 @@ class ContinuousViewManager extends DefaultViewManager {
 		});
 
 		if (newViews.length) {
+			this.pageInLoad = 1;
 			return Promise.all(promises)
 				.then(() => {
+					this.pageInLoad = 0;
 					return this.check();
+
 				})
 				.then(() => {
 					// Check to see if anything new is on screen after rendering
@@ -387,7 +393,7 @@ class ContinuousViewManager extends DefaultViewManager {
 			if (this.settings.axis === "vertical") {
 				this.scrollTo(0, prevTop - bounds.height, true);
 			} else {
-				if (this.settings.direction === 'rtl') {
+				if (this.settings.direction === "rtl") {
 					if (!this.settings.fullsize) {
 						this.scrollTo(prevLeft, 0, true);
 					} else {
